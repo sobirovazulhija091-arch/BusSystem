@@ -1,4 +1,4 @@
 public class Schedulefilter
 {
-     public int ArrivalTime{get;set;}
+     public TimeOnly ArrivalTime{get;set;}
 }

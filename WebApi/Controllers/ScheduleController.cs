@@ -2,9 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ScheduleController(IScheduleService scheduleService):ControllerBase
+public class ScheduleController(IScheduleService service):ControllerBase
 {
-    private IScheduleService service = scheduleService;
     [HttpPost]
      public async Task<Response<string>> AddAsync(ScheduleDto schedule)
     {

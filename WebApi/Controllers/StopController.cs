@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-public class StopController(IStopService stopService):ControllerBase
+public class StopController(IStopService service):ControllerBase
 {
-    private IStopService service=stopService;
+ 
     [HttpPost]
        public async Task<Response<string>> AddAsync(StopDto stop)
     {

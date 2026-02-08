@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-public class DriverController(IDriverService driverService):ControllerBase
+public class DriverController(IDriverService service):ControllerBase
 {
-    private IDriverService service= driverService;
+    
     [HttpPost]
      public async Task<Response<string>> AddAsync(DriverDto driver)
     {

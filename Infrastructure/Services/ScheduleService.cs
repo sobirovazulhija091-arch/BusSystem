@@ -41,9 +41,10 @@ public class ScheduleService(ApplicationDbcontext dbcontext):IScheduleService
     public async Task<PagedResult<Schedule>> GetSchedulesAsync(Schedulefilter filter, PagedQuery pagedQuery)
     {
         IQueryable<Schedule> query = context.Schedules.AsNoTracking();
-        if(filter.ArrivalTime>0)
+        if(filter.ArrivalTime!=null)
         {
-            query = query.Where(x=>x.ArrivalTime==filter.ArrivalTime);
+            query = query.Where(x=> x.ArrivalTime.Hour == filter.ArrivalTime.Hour &&
+                                    x.ArrivalTime.Minute == filter.ArrivalTime.Minute);
         }
          var total = await  query.CountAsync();
         if(pagedQuery.Page!=0 && pagedQuery.PageSize!=0)

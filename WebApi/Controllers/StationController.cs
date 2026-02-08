@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-public class StationController(IStationService stationService):ControllerBase
+public class StationController(IStationService service):ControllerBase
 {
-    private IStationService service=stationService;
+    
     [HttpPost]
      public async Task<Response<string>> AddAsync(StationDto station)
     {

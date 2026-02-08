@@ -2,9 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController(IUserService userService):ControllerBase
+public class UserController(IUserService service):ControllerBase
 {
-    private IUserService service = userService;
     [HttpPost]
      public async Task<Response<string>> AddAsync(UserDto user)
     {

@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PathController(IPathService pathService):ControllerBase
+public class PathController(IPathService service):ControllerBase
 {
-    private IPathService service = pathService;
+   
     [HttpPost]
        public  async Task<Response<string>> AddAsync(PathDto path)
     {

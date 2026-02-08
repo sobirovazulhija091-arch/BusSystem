@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 [ApiController]
 [Route("api/[controller]")]
-public class BusController(IBusService busService):ControllerBase
+public class BusController(IBusService service):ControllerBase
 {
-        private IBusService service=busService;
         [HttpPost]
          public async Task<Response<string>> AddAsync(BusDto busDto)
         {
