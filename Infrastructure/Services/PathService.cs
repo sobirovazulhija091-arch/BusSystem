@@ -18,14 +18,22 @@ public class PathService(ApplicationDbcontext dbcontext):IPathService
         return new Response<string>(HttpStatusCode.Created," Created Successfully");
     }
 
-    public Task<Response<string>> DeleteAsync(int pathid)
+    public async Task<Response<string>> DeleteAsync(int pathid)
     {
-        throw new NotImplementedException();
+        var del = await context.Paths.FindAsync(pathid);
+        context.Paths.Remove(del);
+        await context.SaveChangesAsync();
+        return new Response<string>(HttpStatusCode.OK,"Deleted successfully!");
     }
 
-    public Task<Response<Path>> GetPathByIdAsync(int pathid)
+    public async Task<Response<Path>> GetPathByIdAsync(int pathid)
     {
-        throw new NotImplementedException();
+       var path = await context.Paths.FirstOrDefaultAsync(p => p.Id == pathid);
+    if (path == null)
+    {
+        return new Response<Path>(HttpStatusCode.NotFound,"Path not found");
+    }  
+    return new Response<Path>( HttpStatusCode.OK,"OK",path);
     }
 
     public async Task<PagedResult<Path>> GetPathsAsync(Pathfilter filter, PagedQuery pagedQuery)
@@ -56,8 +64,13 @@ public class PathService(ApplicationDbcontext dbcontext):IPathService
         return response;
     }
 
-    public Task<Response<string>> UpdateAsync(int pathid, UpdatePathDto path)
+    public async Task<Response<string>> UpdateAsync(int pathid, UpdatePathDto path)
     {
-        throw new NotImplementedException();
+        var path1 =await context.Paths.FindAsync(pathid);
+        path1.EndPoint=path.EndPoint;
+        path1.EstimateTime=path.EstimateTime;
+        path1.StartingPoint=path.StartingPoint;
+        await context.SaveChangesAsync();
+        return new Response<string>(HttpStatusCode.OK,"Update successfull");
     }
 }

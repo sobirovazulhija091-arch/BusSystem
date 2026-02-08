@@ -15,4 +15,19 @@ public class PathController(IPathService pathService):ControllerBase
     {
         return await service.GetPathsAsync(filter,pagedQuery);
     }
+    [HttpPut]
+     public async Task<Response<string>> UpdateAsync(int pathid,UpdatePathDto path)
+    {
+         return await service.UpdateAsync(pathid,path);
+    }
+     [HttpDelete]
+     public async Task<Response<string>> DeleteAsync(int pathid)
+    {
+         return await service.DeleteAsync(pathid);
+    }
+     [HttpGet("pathid")]
+     public async  Task<Response<Path>> GetPathByIdAsync(int pathid)
+    {
+         return await service.GetPathByIdAsync(pathid);
+    }
 }

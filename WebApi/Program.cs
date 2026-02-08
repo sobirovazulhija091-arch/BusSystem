@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
-builder.Services.AddScoped<IBusServiceRepo,BusServiceRepo>();
 builder.Services.AddScoped<IBusService,BusService>();
 builder.Services.AddScoped<IDriverService,DriverService>();
 builder.Services.AddScoped<IScheduleService,ScheduleService>();

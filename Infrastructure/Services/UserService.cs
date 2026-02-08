@@ -19,14 +19,26 @@ public class UserService(ApplicationDbcontext dbcontext):IUserService
         return new Response<string>(HttpStatusCode.Created," Created Successfully");
     }
 
-    public Task<Response<string>> DeleteAsync(int userid)
+    public async Task<Response<string>> DeleteAsync(int userid)
     {
-        throw new NotImplementedException();
+         var del = await context.Users.FindAsync(userid);
+        context.Users.Remove(del);
+        await context.SaveChangesAsync();
+        if(del==null)
+        {
+        return new Response<string>(HttpStatusCode.NoContent,"Id not found");
+        }
+        return new Response<string>(HttpStatusCode.OK,"Deleted successfully!");
     }
 
-    public Task<Response<User>> GetUserByIdAsync(int userid)
+    public async Task<Response<User>> GetUserByIdAsync(int userid)
     {
-        throw new NotImplementedException();
+        var user = await context.Users.FirstOrDefaultAsync(x => x.Id == userid);
+     if (user == null)
+    {
+        return new Response<User>(HttpStatusCode.NotFound,"Driver not found");
+    }  
+    return new Response<User>( HttpStatusCode.OK,"OK",user);
     }
 
     public async Task<PagedResult<User>> GetUsersAsync(Userfilter filter, PagedQuery pagedQuery)
@@ -61,8 +73,13 @@ public class UserService(ApplicationDbcontext dbcontext):IUserService
         return response;
     }
 
-    public Task<Response<string>> UpdateAsync(int userid, UpdateUserDto user)
+    public async Task<Response<string>> UpdateAsync(int userid, UpdateUserDto user)
     {
-        throw new NotImplementedException();
+       var u = await context.Users.FindAsync(userid);
+       u.FirstName=user.FirstName;
+       u.PhoneNumber=user.PhoneNumber;
+       u.LastName=user.LastName;
+        await context.SaveChangesAsync();
+        return new Response<string>(HttpStatusCode.OK,"Update successfull");
     }
 }

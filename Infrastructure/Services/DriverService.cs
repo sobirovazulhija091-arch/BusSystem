@@ -18,14 +18,22 @@ public class DriverService(ApplicationDbcontext dbcontext) : IDriverService
         return new Response<string>(HttpStatusCode.Created,"Driver Created Successfully");
     }
 
-    public Task<Response<string>> DeleteAsync(int driverid)
+    public async Task<Response<string>> DeleteAsync(int driverid)
     {
-        throw new NotImplementedException();
+        var del = await context.Drivers.FindAsync(driverid);
+        context.Drivers.Remove(del);
+        await context.SaveChangesAsync();
+        return new Response<string>(HttpStatusCode.OK,"Deleted successfully!");
     }
 
-    public Task<Response<Driver>> GetDriverByIdAsync(int driverid)
+    public async Task<Response<Driver>> GetDriverByIdAsync(int driverid)
     {
-        throw new NotImplementedException();
+         var driver = await context.Drivers.FirstOrDefaultAsync(d => d.Id == driverid);
+    if (driver == null)
+    {
+        return new Response<Driver>(HttpStatusCode.NotFound,"Driver not found");
+    }  
+    return new Response<Driver>( HttpStatusCode.OK,"OK",driver);
     }
 
     public async Task<PagedResult<Driver>> GetDriversAsync(Driverfilter filter,PagedQuery pagedQuery)
@@ -56,8 +64,14 @@ public class DriverService(ApplicationDbcontext dbcontext) : IDriverService
         return response;
     }
 
-    public Task<Response<string>> UpdateAsync(int driverid, UpdateDriverDto driver)
+    public async Task<Response<string>> UpdateAsync(int driverid, UpdateDriverDto driver)
     {
-        throw new NotImplementedException();
+        var driv = await context.Drivers.FindAsync(driverid);
+        driv.FirstName=driver.FirstName;
+        driv.LastName=driver.LastName;
+        driv.PaymentType=driver.PaymentType;
+        driv.PhoneNumber=driver.PhoneNumber;
+       await context.SaveChangesAsync();
+        return new Response<string>(HttpStatusCode.OK,"Update successfull");
     }
 }

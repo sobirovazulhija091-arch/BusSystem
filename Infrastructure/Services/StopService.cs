@@ -14,17 +14,25 @@ public class StopService(ApplicationDbcontext dbcontext):IStopService
         };
          await context.Stops.AddAsync(stop1);
         await context.SaveChangesAsync();
-        return new Response<string>(HttpStatusCode.Created," Created Successfully");
+        return new Response<string>(HttpStatusCode.OK," Created Successfully");
     }
 
-    public Task<Response<string>> DeleteAsync(int stopid)
+    public async Task<Response<string>> DeleteAsync(int stopid)
     {
-        throw new NotImplementedException();
+          var del = await context.Stops.FindAsync(stopid);
+        context.Stops.Remove(del);
+        await context.SaveChangesAsync();
+        return new Response<string>(HttpStatusCode.OK,"Deleted successfully!");
     }
 
-    public Task<Response<Stop>> GetStopByIdAsync(int stopid)
+    public async Task<Response<Stop>> GetStopByIdAsync(int stopid)
     {
-        throw new NotImplementedException();
+          var stop = await context.Stops.FirstOrDefaultAsync(x => x.Id == stopid);
+    if (stop == null)
+    {
+        return new Response<Stop>(HttpStatusCode.NotFound,"Driver not found");
+    }  
+        return new Response<Stop>(HttpStatusCode.OK,"OK",stop);
     }
 
     public async Task<PagedResult<Stop>> GetStopsAsync(Stopfilter filter, PagedQuery pagedQuery)
@@ -55,13 +63,18 @@ public class StopService(ApplicationDbcontext dbcontext):IStopService
         return response;
     }
 
-    public Task<Response<List<Stop>>> SearchStopByNameAsync(string name)
+    public async Task<Response<List<Stop>>> SearchStopByNameAsync(string name)
     {
-        throw new NotImplementedException();
+        var stop = await context.Stops.Where(x=>x.StopName.Contains(name)).ToListAsync();
+        return new Response<List<Stop>>(HttpStatusCode.OK, "OK",stop);
     }
 
-    public Task<Response<string>> UpdateAsync(int stopid, UpdateStopDto stop)
+    public async Task<Response<string>> UpdateAsync(int stopid, UpdateStopDto stop)
     {
-        throw new NotImplementedException();
+        var s = await context.Stops.FindAsync(stopid);
+        s.StopName=stop.StopName;
+        s.Location=stop.Location;
+       await context.SaveChangesAsync();
+        return new Response<string>(HttpStatusCode.OK,"Update successfull");
     }
 }

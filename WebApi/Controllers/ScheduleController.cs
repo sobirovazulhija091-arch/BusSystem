@@ -15,4 +15,19 @@ public class ScheduleController(IScheduleService scheduleService):ControllerBase
     {
         return await service.GetSchedulesAsync(filter,pagedQuery);
     }
+    [HttpPut]
+      public async Task<Response<string>> UpdateAsync(int scheduleid,UpdateScheduleDto schedule)
+    {
+         return await service.UpdateAsync(scheduleid,schedule);
+    }
+     [HttpDelete]
+      public async Task<Response<string>> DeleteAsync(int scheduleid)
+    {
+         return await service.DeleteAsync(scheduleid);
+    }
+     [HttpGet("scheduleid")]
+    public async  Task<Response<Schedule>> GetScheduleByIdAsync(int scheduleid)
+    {
+         return await service.GetScheduleByIdAsync(scheduleid);
+    }
 }

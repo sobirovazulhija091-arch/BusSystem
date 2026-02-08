@@ -18,14 +18,22 @@ public class StationService(ApplicationDbcontext dbcontext):IStationService
         return new Response<string>(HttpStatusCode.Created," Created Successfully");
     }
 
-    public Task<Response<string>> DeleteAsync(int stationid)
+    public async Task<Response<string>> DeleteAsync(int stationid)
     {
-        throw new NotImplementedException();
+         var del = await context.Stations.FindAsync(stationid);
+        context.Stations.Remove(del);
+        await context.SaveChangesAsync();
+        return new Response<string>(HttpStatusCode.OK,"Deleted successfully!");
     }
 
-    public Task<Response<Station>> GetStationByIdAsync(int stationid)
+    public async Task<Response<Station>> GetStationByIdAsync(int stationid)
     {
-        throw new NotImplementedException();
+        var station = await context.Stations.FirstOrDefaultAsync(x => x.Id ==  stationid);
+    if ( station == null)
+    {
+        return new Response<Station>(HttpStatusCode.NotFound,"Station not found");
+    }  
+    return new Response<Station>( HttpStatusCode.OK,"OK", station);
     }
 
     public async Task<PagedResult<Station>> GetStationsAsync(Stationfilter filter, PagedQuery pagedQuery)
@@ -52,8 +60,13 @@ public class StationService(ApplicationDbcontext dbcontext):IStationService
         return response;
     }
 
-    public Task<Response<string>> UpdateAsync(int stationid, UpdateStationDto station)
+    public async Task<Response<string>> UpdateAsync(int stationid, UpdateStationDto station)
     {
-        throw new NotImplementedException();
+        var sta = await context.Stations.FindAsync(stationid);
+        sta.PathId=station.PathId;
+        sta.StopId=station.StopId;
+        sta.Name=station.Name;
+        await context.SaveChangesAsync();
+        return new Response<string>(HttpStatusCode.OK,"Update successfull");
     }
 }

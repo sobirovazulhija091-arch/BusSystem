@@ -15,4 +15,19 @@ public class UserController(IUserService userService):ControllerBase
     {
         return await service.GetUsersAsync(filter,pagedQuery);
     }
+    [HttpPut]
+    public async Task<Response<string>> UpdateAsync(int userid,UpdateUserDto user)
+    {
+         return await service.UpdateAsync(userid,user);
+    }
+    [HttpDelete]
+    public async Task<Response<string>> DeleteAsync(int userid)
+    {
+         return await service.DeleteAsync(userid);
+    }
+     [HttpGet("userid")]
+    public async Task<Response<User>> GetUserByIdAsync(int userid)
+    {
+         return await service.GetUserByIdAsync(userid);
+    }
 }

@@ -20,14 +20,22 @@ public class ScheduleService(ApplicationDbcontext dbcontext):IScheduleService
         return new Response<string>(HttpStatusCode.Created," Created Successfully");
     }
 
-    public Task<Response<string>> DeleteAsync(int scheduleid)
+    public async Task<Response<string>> DeleteAsync(int scheduleid)
     {
-        throw new NotImplementedException();
+         var del = await context.Schedules.FindAsync(scheduleid);
+        context.Schedules.Remove(del);
+        await context.SaveChangesAsync();
+        return new Response<string>(HttpStatusCode.OK,"Deleted successfully!");
     }
 
-    public Task<Response<Schedule>> GetScheduleByIdAsync(int scheduleid)
+    public async Task<Response<Schedule>> GetScheduleByIdAsync(int scheduleid)
     {
-        throw new NotImplementedException();
+      var schedule = await context.Schedules.FirstOrDefaultAsync(d => d.Id == scheduleid);
+     if (schedule == null)
+    {
+        return new Response<Schedule>(HttpStatusCode.NotFound,"Driver not found");
+    }  
+    return new Response<Schedule>( HttpStatusCode.OK,"OK",schedule);
     }
 
     public async Task<PagedResult<Schedule>> GetSchedulesAsync(Schedulefilter filter, PagedQuery pagedQuery)
@@ -54,8 +62,15 @@ public class ScheduleService(ApplicationDbcontext dbcontext):IScheduleService
         return response;
     }
 
-    public Task<Response<string>> UpdateAsync(int scheduleid, UpdateScheduleDto schedule)
+    public async Task<Response<string>> UpdateAsync(int scheduleid, UpdateScheduleDto schedule)
     {
-        throw new NotImplementedException();
+        var s= await context.Schedules.FindAsync(scheduleid);
+        s.BusId=schedule.BusId;
+        s.DriverId=schedule.DriverId;
+        s.ArrivalTime=schedule.ArrivalTime;
+        s.StopId=schedule.StopId;
+        s.PathId=schedule.PathId;
+       await context.SaveChangesAsync();
+        return new Response<string>(HttpStatusCode.OK,"Update successfull");
     }
 }

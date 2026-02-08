@@ -1,10 +1,11 @@
 using System.Net;
+using Microsoft.EntityFrameworkCore;
 using Npgsql.Replication;
 
-public class BusService(IBusServiceRepo busServiceRepo) : IBusService
+public class BusService(ApplicationDbcontext dbcontext) : IBusService
 {
-    private readonly IBusServiceRepo busrepo = busServiceRepo;
-    public async Task<Response<string>> AddAsync(BusDto busDto)
+    private readonly  ApplicationDbcontext context = dbcontext;
+        public async Task<Response<string>> AddAsync(BusDto busDto)
     {
         var bus = new Bus
         {
@@ -14,15 +15,18 @@ public class BusService(IBusServiceRepo busServiceRepo) : IBusService
           CurrentOccupancy=busDto.CurrentOccupancy,
           Price=busDto.Price  
         };
-        await busrepo.AddRepoAsync(bus);
-         return new Response<string>(HttpStatusCode.Created,"Bus Created Successfully");
+         await context.Buses.AddAsync(bus);
+        await context.SaveChangesAsync();
+      return new Response<string>(HttpStatusCode.Created,"Bus Created Successfully");
     }
 
     public  async Task<Response<string>> DeleteAsync(int busid)
     {
         try
         {
-             var del = busrepo.DeleteRepoAsync(busid);
+         var del = await context.Buses.FindAsync(busid);
+          context.Buses.Remove(del);
+          await context.SaveChangesAsync();
         return new Response<string>(HttpStatusCode.OK,"Deleted successfully");
         }
         catch (System.Exception)
@@ -33,32 +37,56 @@ public class BusService(IBusServiceRepo busServiceRepo) : IBusService
 
     public async Task<Response<Bus>> GetBusByIdAsync(int busid)
     {
-       var bus = await busrepo.GetBusByIdRepoAsync(busid);
-       return new Response<Bus>(HttpStatusCode.OK,"OK",bus);
+       var  bus =  context.Buses.Include(a=>a.Schedules).First(a=>a.Id==busid);
+       if (bus == null)
+    {
+        return new Response<Bus>(HttpStatusCode.NotFound,"Bus not found");
+    }
+    return new Response<Bus>(HttpStatusCode.OK,"OK",bus
+    );
+    }
+    
+    public async Task<Response<string>> UpdateAsync(int busid, UpadetBusDto busDto)
+    {
+       var bus = await context.Buses.FindAsync(busid);
+        bus.BusType=busDto.BusType;
+        bus.CurrentOccupancy=busDto.CurrentOccupancy;
+        bus.Capacity=busDto.Capacity;
+        bus.Number=busDto.Number;
+        bus.Price=busDto.Price;
+        await context.SaveChangesAsync();
+        return new Response<string>(HttpStatusCode.OK,"Update successfull");
+    }
+   public async Task<PagedResult<Bus>> GetAll(Busfilter filter,PagedQuery pagedQuery)
+    {
+        IQueryable<Bus> query = context.Buses.AsNoTracking();
+        if (filter.Number != null)
+        {
+            query = query.Where(x=>x.Number==filter.Number);
+        }
+         if (filter.Capacity>0)
+        {
+            query = query.Where(x=>x.Capacity==filter.Capacity);
+        }
+         if (filter.BusType!=null)
+        {
+            query = query.Where(x=>x.BusType==filter.BusType);
+        }
+        var total = await  query.CountAsync();
+        if(pagedQuery.Page!=0 && pagedQuery.PageSize!=0)
+        {
+            query = query.Skip((pagedQuery.Page-1)*pagedQuery.PageSize).Take(pagedQuery.PageSize);
+        }
+        var buses = query.ToList();
+        var response = new PagedResult<Bus>()
+        {
+            Items = buses,
+            Page = pagedQuery.Page,
+            PageSize = pagedQuery.PageSize,
+            TotalCount = total,
+            TotalPages = total/pagedQuery.PageSize
+        }; 
+        return response;
     }
 
-    public Task<Response<List<Bus>>> GetBusesByPathAsync(int pathId)
-    {
-        throw new NotImplementedException();
-    } 
-
-    public Task<Response<List<Bus>>> GetBusesByStopAsync(int stopId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Response<List<Bus>>> GetBusesByTypeAsync(EnumBusType busType)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Response<List<Bus>>> SortBusesByArrivalTimeAsync(int stopId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Response<string>> UpdateAsync(int busid, UpadetBusDto busDto)
-    {
-        throw new NotImplementedException();
-    }
 }
