@@ -11,11 +11,11 @@ public class DriverService(ApplicationDbcontext dbcontext) : IDriverService
             FirstName=driver.FirstName,
             LastName=driver.LastName,
             PhoneNumber=driver.PhoneNumber,
-            PaymentType=driver.PaymentType
+            PaymentType=(EnumPayment)driver.PaymentType
         };
         await context.Drivers.AddAsync(driver1);
         await context.SaveChangesAsync();
-        return new Response<string>(HttpStatusCode.Created,"Driver Created Successfully");
+        return new Response<string>(HttpStatusCode.OK,"Driver Created Successfully");
     }
 
     public async Task<Response<string>> DeleteAsync(int driverid)
@@ -69,7 +69,7 @@ public class DriverService(ApplicationDbcontext dbcontext) : IDriverService
         var driv = await context.Drivers.FindAsync(driverid);
         driv.FirstName=driver.FirstName;
         driv.LastName=driver.LastName;
-        driv.PaymentType=driver.PaymentType;
+        driv.PaymentType=(EnumPayment)driver.PaymentType;
         driv.PhoneNumber=driver.PhoneNumber;
        await context.SaveChangesAsync();
         return new Response<string>(HttpStatusCode.OK,"Update successfull");

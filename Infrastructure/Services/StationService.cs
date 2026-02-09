@@ -4,7 +4,7 @@ using System.Net;
 public class StationService(ApplicationDbcontext dbcontext):IStationService
 {
      private readonly ApplicationDbcontext context = dbcontext;
-
+     
     public async Task<Response<string>> AddAsync(StationDto station)
     {
         var station1 = new Station
@@ -15,7 +15,7 @@ public class StationService(ApplicationDbcontext dbcontext):IStationService
         };
         await context.Stations.AddAsync(station1);
         await context.SaveChangesAsync();
-        return new Response<string>(HttpStatusCode.Created," Created Successfully");
+        return new Response<string>(HttpStatusCode.OK," Created Successfully");
     }
 
     public async Task<Response<string>> DeleteAsync(int stationid)

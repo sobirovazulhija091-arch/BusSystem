@@ -4,5 +4,5 @@ public class UpdateDriverDto
     public string FirstName{get;set;}=null!;
     public string LastName{get;set;}=null!;
     public string PhoneNumber{get;set;}=null!;
-    public string PaymentType{get;set;}
+    public int PaymentType{get;set;}
 }

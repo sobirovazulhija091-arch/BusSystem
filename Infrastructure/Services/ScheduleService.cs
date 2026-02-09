@@ -17,7 +17,7 @@ public class ScheduleService(ApplicationDbcontext dbcontext):IScheduleService
        };   
         await context.Schedules.AddAsync(sch);
         await context.SaveChangesAsync();
-        return new Response<string>(HttpStatusCode.Created," Created Successfully");
+        return new Response<string>(HttpStatusCode.OK," Created Successfully");
     }
 
     public async Task<Response<string>> DeleteAsync(int scheduleid)

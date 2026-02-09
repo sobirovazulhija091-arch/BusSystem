@@ -1,4 +1,4 @@
 public enum EnumPayment
 {
-    Cash,Card
+    Cash=1,Card=2
 }

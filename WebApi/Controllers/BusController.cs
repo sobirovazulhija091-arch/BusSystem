@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
 [ApiController]
 [Route("api/[controller]")]
 public class BusController(IBusService service):ControllerBase

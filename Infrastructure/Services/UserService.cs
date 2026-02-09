@@ -16,7 +16,7 @@ public class UserService(ApplicationDbcontext dbcontext):IUserService
          };
            await context.Users.AddAsync(users);
         await context.SaveChangesAsync();
-        return new Response<string>(HttpStatusCode.Created," Created Successfully");
+        return new Response<string>(HttpStatusCode.OK," Created Successfully");
     }
 
     public async Task<Response<string>> DeleteAsync(int userid)

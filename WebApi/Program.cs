@@ -20,9 +20,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseMiddleware<RequestTimeMiddleware>();
 app.MapOpenApi();
 app.MapControllers();
-app.UseHttpsRedirection();
 app.Run();
 

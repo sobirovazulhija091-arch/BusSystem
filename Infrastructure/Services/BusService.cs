@@ -10,14 +10,14 @@ public class BusService(ApplicationDbcontext dbcontext) : IBusService
         var bus = new Bus
         {
           Number=busDto.Number,
-          BusType=busDto.BusType,
+          BusType=(EnumBusType)busDto.BusType,
           Capacity=busDto.Capacity,
           CurrentOccupancy=busDto.CurrentOccupancy,
           Price=busDto.Price  
         };
          await context.Buses.AddAsync(bus);
         await context.SaveChangesAsync();
-      return new Response<string>(HttpStatusCode.Created,"Bus Created Successfully");
+      return new Response<string>(HttpStatusCode.OK,"Bus Created Successfully");
     }
 
     public  async Task<Response<string>> DeleteAsync(int busid)
@@ -49,7 +49,7 @@ public class BusService(ApplicationDbcontext dbcontext) : IBusService
     public async Task<Response<string>> UpdateAsync(int busid, UpadetBusDto busDto)
     {
        var bus = await context.Buses.FindAsync(busid);
-        bus.BusType=busDto.BusType;
+        bus.BusType=(EnumBusType)busDto.BusType;
         bus.CurrentOccupancy=busDto.CurrentOccupancy;
         bus.Capacity=busDto.Capacity;
         bus.Number=busDto.Number;
@@ -67,10 +67,6 @@ public class BusService(ApplicationDbcontext dbcontext) : IBusService
          if (filter.Capacity>0)
         {
             query = query.Where(x=>x.Capacity==filter.Capacity);
-        }
-         if (filter.BusType!=null)
-        {
-            query = query.Where(x=>x.BusType==filter.BusType);
         }
         var total = await  query.CountAsync();
         if(pagedQuery.Page!=0 && pagedQuery.PageSize!=0)

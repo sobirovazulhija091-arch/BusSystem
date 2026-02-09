@@ -15,7 +15,7 @@ public class PathService(ApplicationDbcontext dbcontext):IPathService
          };
           await context.Paths.AddAsync(path1);
         await context.SaveChangesAsync();
-        return new Response<string>(HttpStatusCode.Created," Created Successfully");
+        return new Response<string>(HttpStatusCode.OK," Created Successfully");
     }
 
     public async Task<Response<string>> DeleteAsync(int pathid)

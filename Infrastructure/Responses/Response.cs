@@ -4,7 +4,7 @@ public class Response<T>
 {
     public HttpStatusCode StatusCode{get;set;}
     public T? Data{get;set;}
-    public List<string> Description{get;set;}=null!;
+    public List<string> Description{get;set;}=[];
     public Response(HttpStatusCode httpStatus ,List<string> message,T data)
     {
         StatusCode=httpStatus;
