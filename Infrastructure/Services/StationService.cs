@@ -3,8 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 public class StationService(ApplicationDbcontext dbcontext):IStationService
 {
-     private readonly ApplicationDbcontext context = dbcontext;
-     
+     private readonly ApplicationDbcontext context = dbcontext;     
     public async Task<Response<string>> AddAsync(StationDto station)
     {
         var station1 = new Station

@@ -5,7 +5,7 @@ using Npgsql.Replication;
 public class BusService(ApplicationDbcontext dbcontext) : IBusService
 {
     private readonly  ApplicationDbcontext context = dbcontext;
-        public async Task<Response<string>> AddAsync(BusDto busDto)
+    public async Task<Response<string>> AddAsync(BusDto busDto)
     {
         var bus = new Bus
         {
@@ -57,7 +57,7 @@ public class BusService(ApplicationDbcontext dbcontext) : IBusService
         await context.SaveChangesAsync();
         return new Response<string>(HttpStatusCode.OK,"Update successfull");
     }
-   public async Task<PagedResult<Bus>> GetAll(Busfilter filter,PagedQuery pagedQuery)
+    public async Task<PagedResult<Bus>> GetAll(Busfilter filter,PagedQuery pagedQuery)
     {
         IQueryable<Bus> query = context.Buses.AsNoTracking();
         if (filter.Number != null)
